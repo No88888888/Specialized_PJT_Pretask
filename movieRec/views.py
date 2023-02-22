@@ -55,6 +55,7 @@ def train_model(request):
 
 def run_kNN(request):
     k = request.POST.get('param_k')
+    # 적은 데이터로 하기 때문에 tiny
     os.system('cd matrixfactorization& python train.py -i data/tiny -o result/tiny -a 0 -k %s'%k)
     load_result('matrixfactorization')
 
@@ -69,3 +70,11 @@ def run_MF_PLSI(request):
     os.system('cd matrixfactorization& python train.py -i data/tiny -o result/tiny -a 2 -d %s'%d)
     load_result('matrixfactorization')
 
+
+def load_recomm(cur, model_home):
+    path = join(model_home, 'recommand_rating.txt' )
+    cur.excute('DELETE FROM movieRec_recomm')
+    with open(path) as f:
+        for line in f:
+            token = line.strip().split('::')
+            cur.excute('INSERT INTO movieRec_recomm(user_id,movie_id, score) VALUES(?,?,?)', token)
