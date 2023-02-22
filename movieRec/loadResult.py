@@ -21,7 +21,6 @@ def load_movies(cur):
             try: cur.execute('INSERT INTO movieRec_movie(id, title, text, year) VALUES(?,?,?,?)', (id, title, text, year))
             except: pass
 
-
 def load_viewed(cur, model_home):
     path = join(model_home, 'train_ratings.txt')
     cur.execute('DELETE FROM movieRec_viewed')
@@ -35,7 +34,12 @@ def load_viewed(cur, model_home):
             cur.execute('INSERT INTO movieRec_viewed(user_id, movie_id, rating) VALUES(?,?,?)', (token[0], token[1],token[2]) )
 
 def load_recomm(cur, model_home):
-    pass
+    path = join(model_home, 'recommend_ratings.txt' )
+    cur.execute('DELETE FROM movieRec_recomm')
+    with open(path) as f:
+        for line in f:
+            token = line.strip().split('::')
+            cur.execute('INSERT INTO movieRec_recomm(user_id,movie_id, score) VALUES(?,?,?)', token)
 
 def load_result(model_home):
     conn= sqlite3.connect('./db.sqlite3')

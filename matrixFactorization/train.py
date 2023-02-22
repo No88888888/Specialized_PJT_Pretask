@@ -11,8 +11,18 @@ def load(path):
 
 def recommend(R_train, R_predicted, item_ids, output_path):
     # write train ratings
+    with open(output_path + '/train_ratings.txt', 'w') as f:
+        rows, cols = R_train.nonzero()
+        for row, col in zip(rows, cols):
+            f.write('%d::%s::%.1f\n' % (row, item_ids[col], R_train[row, col]))
+            # remove train data from recommendation
+            R_predicted[row, col] = 0
     # write recommend ratings
-    pass
+    with open(output_path + '/recommend_ratings.txt', 'w') as f:
+        for i in range(R_predicted.shape[0]):
+            for j in range(R_predicted.shap[1]):
+                if R_predicted[i, j] > 1:
+                    f.write('%d::%s::%.3f\n' % (i, item_ids[j], R_predicted[i, j]))
 
 
 if __name__ == '__main__':

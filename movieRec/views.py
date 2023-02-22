@@ -71,10 +71,3 @@ def run_MF_PLSI(request):
     load_result('matrixfactorization')
 
 
-def load_recomm(cur, model_home):
-    path = join(model_home, 'recommand_rating.txt' )
-    cur.excute('DELETE FROM movieRec_recomm')
-    with open(path) as f:
-        for line in f:
-            token = line.strip().split('::')
-            cur.excute('INSERT INTO movieRec_recomm(user_id,movie_id, score) VALUES(?,?,?)', token)
